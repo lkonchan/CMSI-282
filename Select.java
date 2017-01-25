@@ -1,18 +1,22 @@
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
-// import java.io.File;
-// import java.io.FileNotFoundException;
-// import java.io.PrintWriter;
 import java.io.InputStreamReader;
 import java.util.Random;
 
 public class Select {
 
 	public static void main (String[] args) throws Exception {
+
+		//checking for a user-provided kth element as the first argument
+		try {
+			int k = Integer.parseInt(args[0]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("BAD DATA. Please provide a kth element as your first argument.");
+		}
+
 		java.io.BufferedReader input = new java.io.BufferedReader ( new java.io.InputStreamReader (System.in) );
-		
+	
 		String s = "";	
 		try {
 			s = input.readLine();
@@ -38,6 +42,8 @@ public class Select {
 		// System.out.println("Random element for partion selected: " + p);
 
 		System.out.println("Partition attempt: " + partition(data));
+		
+		
 
 
 	}	
@@ -62,34 +68,50 @@ public class Select {
 
 		//step 2: going left to right, swap p's place with anything larger
 		boolean seekingHigher = true;
-		for (int j = 0; j < data.size()/2; j++) {
+		for (int j = 0; j < data.size() - 1; j++) {
 			while (seekingHigher) {
-				for (int i = 0; i < data.size(); i++) {
+				for (int i = 0; i <= pPlace; i++) {
 					if (pValue < data.get(i) && seekingHigher) { //sorting highers on right 
 						temp = data.get(i);
-						pPlace = data.lastIndexOf(pValue);
+						pPlace = data.lastIndexOf(pValue);//does not account for repetition
 						data.set(i, pValue);
 						data.set(pPlace, temp);
+						pPlace = i;
 						System.out.println(data);
+						System.out.println("pivot place: " + pPlace);
 						seekingHigher = false; //now want to sort lowers on left
 				    }
+
+				    if (i == pPlace) { 
+				    	seekingHigher = false; 
+				    }
 				}
+				//System.out.println("hang1");
 			}
 
 			while (!seekingHigher) {
-				for (int i = data.size() - 1; i > 0; i--) {
+				for (int i = data.size() - 1; i >= pPlace; i--) {
 					if (pValue > data.get(i) && !seekingHigher) { //sorting lowers on left
 						temp = data.get(i);
-						pPlace = data.lastIndexOf(pValue);
+						pPlace = data.lastIndexOf(pValue); //does not account for repetition
 						data.set(i, pValue);
 						data.set(pPlace, temp);
+						pPlace = i;
 						System.out.println(data);
+						System.out.println("pivot place: " + i);
 						seekingHigher = true;
 					}
+
+					if (i == pPlace) { 
+						seekingHigher=true; 
+					}
 				}
+
+				//System.out.println("hang2");
 			}
 
 		}
+		System.out.println("hang3");
 		
 		return data;
 	}
