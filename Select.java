@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Select {
 
@@ -55,7 +56,7 @@ public class Select {
 	}	
 
 	public static int randomP(ArrayList<Integer> data, int min, int max) {
-		int random = new Random().nextInt(max - min);
+		int random = ThreadLocalRandom.current().nextInt(min, max + 1);
     	return random;
 	}
 
@@ -73,12 +74,13 @@ public class Select {
 		//step 2: going left to right, swap p's place with anything larger
 		boolean seekingHigher = true;
 		for (int j = min; j < max; j++) {
-			System.out.println(max - min);
+			//System.out.println(max - min);
 			while (seekingHigher) {
 				for (int i = min; i <= pPlace; i++) {
 					if (pValue < data.get(i) && seekingHigher) { //sorting highers on right 
 						temp = data.get(i);
 						pPlace = data.lastIndexOf(pValue);//does not account for repetition
+						System.out.println("pPlace: " + pPlace);
 						data.set(i, pValue);
 						data.set(pPlace, temp);
 						pPlace = i;
@@ -98,6 +100,7 @@ public class Select {
 					if (pValue > data.get(i) && !seekingHigher) { //sorting lowers on left
 						temp = data.get(i);
 						pPlace = data.lastIndexOf(pValue); //does not account for repetition
+						System.out.println("pPlace: " + pPlace);
 						data.set(i, pValue);
 						data.set(pPlace, temp);
 						pPlace = i;
@@ -116,6 +119,7 @@ public class Select {
 
 		}
 		p = pPlace; //not sure if this works
+		System.out.println("p is now: " + p);
 		return data;
 	}
 		
@@ -129,9 +133,15 @@ public class Select {
 		if (p == k) {
 			return data.get(p);
 		} else if (p < k) {
-			select(k, sortedData, p + 1, sortedData.size()-1);
+			System.out.println("Max: " + max);
+			System.out.println("Min(p+1): " + p + 1);
+			select(k, sortedData, p + 1, max);
+			
 		} else if (p > k) { 
-			select(k, sortedData, 0, p - 1);
+			System.out.println("Min: " + min);
+			System.out.println("Max(p-1): " + (p - 1));
+			select(k, sortedData, min, p - 1);
+			
 		}
 
 		return data.get(p);
