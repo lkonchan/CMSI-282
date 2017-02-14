@@ -17,7 +17,7 @@ public class Select {
 		try {
 			k = Integer.parseInt(args[0]);
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("BAD DATA. Please provide a kth element as your first argument.");
+			System.out.println("BAD DATA");
 		}
 
 		java.io.BufferedReader input = new java.io.BufferedReader ( new java.io.InputStreamReader (System.in) );
@@ -26,7 +26,7 @@ public class Select {
 		try {
 			s = input.readLine();
 		} catch (IOException e){
-			System.out.println("Whoopsie");
+			System.out.println("BAD DATA");
 		}
 
 		ArrayList<Integer> data = new ArrayList<Integer>(); 
@@ -36,23 +36,22 @@ public class Select {
 			try {
 				s = input.readLine();
 			} catch (IOException e){
-				System.out.println("Whoopsie");
+				System.out.println("BAD DATA");
 			}
 		}
 
-		//Data stored into array
-		//System.out.println("Array created from text file: " + data);
+		if (k > data.size()-1) {
+			System.out.println("BAD DATA");
+			throw new ArrayIndexOutOfBoundsException();
+		}
 
-		// int p = randomP(data);
-		// System.out.println("Random element for partion selected: " + p);
+		if (k < 0) {
+			System.out.println("BAD DATA");
+			throw new ArrayIndexOutOfBoundsException();
+		}
 
-		//System.out.println("Partition attempt: " + partition(data));
-
-		System.out.println("Select attempt: " + select(k, data, 0, data.size()-1));
+		System.out.println(select(k, data, 0, data.size()-1));
 		
-		
-
-
 	}	
 
 	public static int randomP(ArrayList<Integer> data, int min, int max) {
@@ -60,13 +59,11 @@ public class Select {
     	return random;
 	}
 
-	public static ArrayList<Integer> partition(ArrayList<Integer> data, int min, int max) {
+	public static ArrayList<Integer> pessimisticPartition(ArrayList<Integer> data, int min, int max) {
 		//step 1: swap p with last integer of list
 		int temp = data.get(max);
 		int pPlace = randomP(data, min, max);
 		int pValue = data.get(pPlace);
-
-		System.out.println("Rand element = " + pValue);
 		
 		data.set(max, pValue); //set value of p to last spot in array 
 		data.set(pPlace, temp); //swap last value in array with p's spot
@@ -74,18 +71,14 @@ public class Select {
 		//step 2: going left to right, swap p's place with anything larger
 		boolean seekingHigher = true;
 		for (int j = min; j < max; j++) {
-			//System.out.println(max - min);
 			while (seekingHigher) {
 				for (int i = min; i <= pPlace; i++) {
 					if (pValue < data.get(i) && seekingHigher) { //sorting highers on right 
 						temp = data.get(i);
-						pPlace = data.lastIndexOf(pValue);//does not account for repetition
-						System.out.println("pPlace: " + pPlace);
+						pPlace = data.lastIndexOf(pValue);
 						data.set(i, pValue);
 						data.set(pPlace, temp);
 						pPlace = i;
-						System.out.println(data);
-						System.out.println("pivot place: " + pPlace);
 						seekingHigher = false; //now want to sort lowers on left
 				    }
 
@@ -99,13 +92,10 @@ public class Select {
 				for (int i = max; i >= pPlace; i--) {
 					if (pValue > data.get(i) && !seekingHigher) { //sorting lowers on left
 						temp = data.get(i);
-						pPlace = data.lastIndexOf(pValue); //does not account for repetition
-						System.out.println("pPlace: " + pPlace);
+						pPlace = data.lastIndexOf(pValue);
 						data.set(i, pValue);
 						data.set(pPlace, temp);
 						pPlace = i;
-						System.out.println(data);
-						System.out.println("pivot place: " + i);
 						seekingHigher = true;
 					}
 
@@ -113,35 +103,70 @@ public class Select {
 						seekingHigher=true; 
 					}
 				}
-
-				//System.out.println("hang2");
 			}
 
 		}
-		p = pPlace; //not sure if this works
-		System.out.println("p is now: " + p);
+		p = pPlace; 
 		return data;
 	}
+
+	// faster algorithm that isn't fully de-bugged yet:
+
+	// public static ArrayList<Integer> partition(ArrayList<Integer> data, int min, int max) {
+	// 	//step 1: swap p with last integer of list
+	// 	int temp = data.get(max);
+	// 	int pPlace = randomP(data, min, max);
+	// 	int pValue = data.get(pPlace);
+		
+	// 	data.set(max, pValue); //set value of p to last spot in array 
+	// 	data.set(pPlace, temp); //swap last value in array with p's spot
+
+	// 	//step 2: going left to right, swap p's place with anything larger
+	// 	boolean seekingHigher = true;
+	//  int i = min;
+	//  int j = max;
+	//  while(i != pPlace && j != pPlace) {
+	// 		if (seekingHigher) {
+// 				if (pValue < data.get(i) { //sorting highers on right 
+// 					temp = data.get(i);
+// 					pPlace = data.lastIndexOf(pValue);
+// 					data.set(i, pValue);
+// 					data.set(pPlace, temp);
+// 					pPlace = i;
+// 					seekingHigher = false; //now want to sort lowers on left
+// 			    }
+	//          i++;
+	// 		} 
+
+	// 		if (!seekingHigher) {
+	// 				if (pValue > data.get(j)) { //sorting lowers on left
+	// 					temp = data.get(j);
+	// 					pPlace = data.lastIndexOf(pValue);
+	// 					data.set(j, pValue);
+	// 					data.set(pPlace, temp);
+	// 					pPlace = j;
+	// 					seekingHigher = true;
+	// 				}
+	//              j++;
+	// 		}
+
+	// 	}
+	// 	p = pPlace; 
+	// 	return data;
+	// }
 		
 
 	public static int select(int k, ArrayList<Integer> data, int min, int max) {
 		//call partition
-		ArrayList<Integer> sortedData = partition(data, min, max);
-
+		ArrayList<Integer> sortedData = pessimisticPartition(data, min, max);
 
 		//check cases 1, 2, 3 and call select again if 1 or 3 is true with smaller data set
 		if (p == k) {
 			return data.get(p);
 		} else if (p < k) {
-			System.out.println("Max: " + max);
-			System.out.println("Min(p+1): " + p + 1);
-			select(k, sortedData, p + 1, max);
-			
+			select(k, sortedData, p + 1, max);			
 		} else if (p > k) { 
-			System.out.println("Min: " + min);
-			System.out.println("Max(p-1): " + (p - 1));
-			select(k, sortedData, min, p - 1);
-			
+			select(k, sortedData, min, p - 1);			
 		}
 
 		return data.get(p);
