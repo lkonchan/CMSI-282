@@ -9,29 +9,39 @@ public class MathMethods {
     public static void main (String[] args){
 
 
-      // String method = args[0];
-      //
-      // if (method.equals("factorial")) {
-      //   System.out.println(factorial(Integer.parseInt(args[1])));
-      // }
-      // if (method.equals("fibonacci")) {
-      //   System.out.println(fibonacci(Integer.parseInt(args[1])));
-      // }
-      // if (method.equals("gcd")) {
-      //   System.out.println(gcd(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
-      // }
-      // if (method.equals("lcm")) {
-      //   System.out.println(lcm(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
-      // }
+      String method = args[0];
+
+      if (method.equals("factorial")) {
+        System.out.println(factorial(Integer.parseInt(args[1])));
+      }
+      if (method.equals("fibonacci")) {
+        System.out.println(fibonacci(Integer.parseInt(args[1])));
+      }
+      if (method.equals("gcd")) {
+        System.out.println(gcd(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+      }
+      if (method.equals("lcm")) {
+        System.out.println(lcm(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+      }
+      if (method.equals("power")) {
+        System.out.println(power(Double.parseDouble(args[1]), Integer.parseInt(args[2])));
+      }
+      if (method.equals("root")) {
+        System.out.println(root(Integer.parseInt(args[1]), Double.parseDouble(args[2]), Double.parseDouble(args[3])));
+      }
+      if (method.equals("sqrt")) {
+        System.out.println(sqrt(Double.parseDouble(args[1]), Double.parseDouble(args[2])));
+      }
+
 
       //testing
       // System.out.println(factorial(6));
       // System.out.println(fibonacci(100));
       // System.out.println(gcd(1, 1)); //two consecutive fibonacci numbers = worst case scenario
-      //   System.out.println(lcm(8, 7));
+      // System.out.println(lcm(8, 7));
       // System.out.println(poly(5, [2, 1, 0]));
-      // System.out.println(power(5, 3));
-       System.out.println(root(5, 243, 1));
+      // System.out.println(power(1, 3));
+      // System.out.println(root(5, 243, 1));
       // System.out.println(sqrt(25, 1)); //epsilon must be related intellectually to the digit
 
     }
@@ -83,30 +93,36 @@ public class MathMethods {
     //
     // }
     //
-    // public static double power(double x, int n) {
-    //    // use the "binary" divide and conquer of the power to lessen the number of multiplications
-    // }
-    //
+    public static double power(double x, int n) {
+       // use the "binary" divide and conquer of the power to lessen the number of multiplications
+       if (n == 0) {
+         return 1;
+       }
+       double temp = power(x, n/2);
+       if (n%2 == 1) {
+         return temp * temp * x;
+       } else {
+         return temp * temp;
+       }
+    }
+
     public static double root(int n, double x, double epsilon) {
       if (x == 1) {
          return 1;
       } else if (x < 1) {
-        //need to do
-         return 0;
+         // WRINKLE if the number is less than 1, bounds must change
+         return rootWork(n, 0, 1, x, epsilon);
       } else {
          return rootWork(n,0,x,x,epsilon);
       }
     }
 
     public static double sqrt(double x, double epsilon) {
-       // use the binary search (halving technique) until you find a value that's within epsilon's requirements
-       // WRINKLE if the number is less than 1, bounds must change
-       // test 1 - an edge case
        if (x == 1) {
           return 1;
        } else if (x < 1) {
-         //need to do
-          return 0;
+          // WRINKLE if the number is less than 1, bounds must change
+          return rootWork(2, 0, 1, x, epsilon);
        } else {
           return rootWork(2, 0, x , x, epsilon);
        }
@@ -126,10 +142,8 @@ public class MathMethods {
         return half;
       } else {
         if (test > x) {
-          //System.out.println(half);
           return rootWork(n, bound1, half, x, e);
         } else {
-          //System.out.println(half);
           return rootWork(n, half, bound2, x, e);
         }
       }
