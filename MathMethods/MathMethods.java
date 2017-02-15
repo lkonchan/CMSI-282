@@ -31,8 +31,8 @@ public class MathMethods {
       //   System.out.println(lcm(8, 7));
       // System.out.println(poly(5, [2, 1, 0]));
       // System.out.println(power(5, 3));
-      // System.out.println(root(243, 5, ?));
-      System.out.println(sqrt(25, 1)); //epsilon must be related intellectually to the digit
+       System.out.println(root(5, 243, 1));
+      // System.out.println(sqrt(25, 1)); //epsilon must be related intellectually to the digit
 
     }
 
@@ -87,10 +87,17 @@ public class MathMethods {
     //    // use the "binary" divide and conquer of the power to lessen the number of multiplications
     // }
     //
-    // public static double root(int n, double x, double epsilon) {
-    //
-    // }
-    //
+    public static double root(int n, double x, double epsilon) {
+      if (x == 1) {
+         return 1;
+      } else if (x < 1) {
+        //need to do
+         return 0;
+      } else {
+         return rootWork(n,0,x,x,epsilon);
+      }
+    }
+
     public static double sqrt(double x, double epsilon) {
        // use the binary search (halving technique) until you find a value that's within epsilon's requirements
        // WRINKLE if the number is less than 1, bounds must change
@@ -98,26 +105,32 @@ public class MathMethods {
        if (x == 1) {
           return 1;
        } else if (x < 1) {
+         //need to do
           return 0;
        } else {
-          return sqrtWork(0,x,x,epsilon);
+          return rootWork(2, 0, x , x, epsilon);
        }
     }
 
-    private static double sqrtWork(double bound1, double bound2, double x, double e) {
+    private static double rootWork(int n, double bound1, double bound2, double x, double e) {
       double half = (bound1 + bound2)/2;
       double de1 = bound1 - half;
       double de2 = bound2 - half;
 
-      if (half * half == x || (de1 <= e && de1 >= -e) || (de2 <= e && de2 >= -e)) {
+      double test = half;
+      for (int i = 1; i < n; i++) {
+        test *= half;
+      }
+
+      if (test == x || (de1 <= e && de1 >= -e) || (de2 <= e && de2 >= -e)) {
         return half;
       } else {
-        if (half * half > x) {
+        if (test > x) {
           //System.out.println(half);
-          return sqrtWork(bound1, half, x, e);
+          return rootWork(n, bound1, half, x, e);
         } else {
           //System.out.println(half);
-          return sqrtWork(half, bound2, x, e);
+          return rootWork(n, half, bound2, x, e);
         }
       }
 
