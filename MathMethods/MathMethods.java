@@ -7,18 +7,32 @@ import java.lang.Object;
 public class MathMethods {
 
     public static void main (String[] args){
-      //needs to be a runner by being able to call
-      //any of the methods from the command line
+
+
+      // String method = args[0];
+      //
+      // if (method.equals("factorial")) {
+      //   System.out.println(factorial(Integer.parseInt(args[1])));
+      // }
+      // if (method.equals("fibonacci")) {
+      //   System.out.println(fibonacci(Integer.parseInt(args[1])));
+      // }
+      // if (method.equals("gcd")) {
+      //   System.out.println(gcd(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+      // }
+      // if (method.equals("lcm")) {
+      //   System.out.println(lcm(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+      // }
 
       //testing
-      //System.out.println(factorial(6));
-       System.out.println(fibonacci(100));
+      // System.out.println(factorial(6));
+      // System.out.println(fibonacci(100));
       // System.out.println(gcd(1, 1)); //two consecutive fibonacci numbers = worst case scenario
       //   System.out.println(lcm(8, 7));
       // System.out.println(poly(5, [2, 1, 0]));
       // System.out.println(power(5, 3));
-      // System.out.println(root(243, 5, ?)); //wut is epsilon?
-      // System.out.println(sqrt(64, ?)); //epsilon must be related intellectually to the digit
+      // System.out.println(root(243, 5, ?));
+      System.out.println(sqrt(25, 1)); //epsilon must be related intellectually to the digit
 
     }
 
@@ -71,20 +85,42 @@ public class MathMethods {
     //
     // public static double power(double x, int n) {
     //    // use the "binary" divide and conquer of the power to lessen the number of multiplications
-    //
     // }
     //
     // public static double root(int n, double x, double epsilon) {
     //
     // }
     //
-    // public static double sqrt(double x, double epsilon) {
-    //    // use the binary search (halving technique) until you find a value that's within epsilon's requirements
-    //    // WRINKLE if the number is less than 1, bounds must change
-    //    // test 1 - an edge case
-    // }
+    public static double sqrt(double x, double epsilon) {
+       // use the binary search (halving technique) until you find a value that's within epsilon's requirements
+       // WRINKLE if the number is less than 1, bounds must change
+       // test 1 - an edge case
+       if (x == 1) {
+          return 1;
+       } else if (x < 1) {
+          return 0;
+       } else {
+          return sqrtWork(0,x,x,epsilon);
+       }
+    }
 
-    //epsilon is the number of error to round to
+    private static double sqrtWork(double bound1, double bound2, double x, double e) {
+      double half = (bound1 + bound2)/2;
+      double de1 = bound1 - half;
+      double de2 = bound2 - half;
 
+      if (half * half == x || (de1 <= e && de1 >= -e) || (de2 <= e && de2 >= -e)) {
+        return half;
+      } else {
+        if (half * half > x) {
+          //System.out.println(half);
+          return sqrtWork(bound1, half, x, e);
+        } else {
+          //System.out.println(half);
+          return sqrtWork(half, bound2, x, e);
+        }
+      }
+
+    }
 
 }
