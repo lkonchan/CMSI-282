@@ -1,8 +1,4 @@
 import java.math.BigInteger;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.Object;
 
 public class MathMethods {
 
@@ -23,6 +19,13 @@ public class MathMethods {
       if (method.equals("lcm")) {
         System.out.println(lcm(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
       }
+      if (method.equals("poly")) {
+        double[] coeffs = new double[args.length - 2];
+        for (int i = 2; i < args.length; i++) {
+          coeffs[i - 2] = Double.parseDouble(args[i]);
+        }
+        System.out.println(poly(Double.parseDouble(args[1]), coeffs));
+      }
       if (method.equals("power")) {
         System.out.println(power(Double.parseDouble(args[1]), Integer.parseInt(args[2])));
       }
@@ -39,7 +42,10 @@ public class MathMethods {
       // System.out.println(fibonacci(100));
       // System.out.println(gcd(1, 1)); //two consecutive fibonacci numbers = worst case scenario
       // System.out.println(lcm(8, 7));
-      // System.out.println(poly(5, [2, 1, 0]));
+      // double[] list = {2, 1, 0
+      // double[] list2 = {4, 72, 984, 689, 44, 3, 1894753};
+      // System.out.println(poly(5, list)); //55 = 2x^2 + 1x + 0 = 2(5)^2 + 1(5) + 0
+      // System.out.println(poly(79, list2))
       // System.out.println(power(1, 3));
       // System.out.println(root(5, 243, 1));
       // System.out.println(sqrt(25, 1)); //epsilon must be related intellectually to the digit
@@ -72,6 +78,8 @@ public class MathMethods {
       }
       return b;
     }
+
+    4(79)^6+72(79)^5+984(79)^4+689(79)^3+44(79)^2+3(79)+1894753
     //
     public static long gcd(long m, long n) {
        if (m > n) {
@@ -89,10 +97,14 @@ public class MathMethods {
       return((m*n)/gcd(m,n));
     }
 
-    // public static double poly(double x, double[] coeff) {
-    //
-    // }
-    //
+    public static double poly(double x, double[] coeff) {
+      double solution = 0;
+      for (int i = 0; i < coeff.length; i++) {
+        solution = (solution * x) + coeff[i];
+      }
+      return solution;
+    }
+
     public static double power(double x, int n) {
        // use the "binary" divide and conquer of the power to lessen the number of multiplications
        if (n == 0) {
